@@ -110,11 +110,9 @@ PRODUCT_PACKAGES += \
 # Required Lineage packages
 PRODUCT_PACKAGES += \
     BluetoothExt \
-    CMAudioService \
     LineageParts \
     Development \
-    Profiles \
-    WeatherManagerService
+    Profiles
 
 # Optional packages
 PRODUCT_PACKAGES += \
