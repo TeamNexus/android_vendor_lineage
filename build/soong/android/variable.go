@@ -12,6 +12,9 @@ type Product_variables struct {
 	Uses_samsung_cameraformat_nv21 struct {
 		Cflags []string
 	}
+	Target_shim_libs struct {
+		Cppflags []string
+	}
 }
 
 type ProductVariables struct {
@@ -20,4 +23,5 @@ type ProductVariables struct {
 	Needs_text_relocations  *bool `json:",omitempty"`
 	Uses_qcom_bsp_legacy  *bool `json:",omitempty"`
 	Uses_samsung_cameraformat_nv21  *bool `json:",omitempty"`
+	Target_shim_libs  *string `json:",omitempty"`
 }
