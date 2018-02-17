@@ -9,6 +9,6 @@ lineage_soong:
 	echo '    "Needs_text_relocations": $(if $(filter true,$(TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS)),true,false),'; \
 	echo '    "Uses_qcom_bsp_legacy": $(if $(filter true,$(TARGET_USES_QCOM_BSP_LEGACY)),true,false),'; \
 	echo '    "Uses_samsung_cameraformat_nv21": $(if $(filter true,$(BOARD_USE_SAMSUNG_CAMERAFORMAT_NV21)),true,false),'; \
-	echo '    "Target_shim_libs": "$(TARGET_LD_SHIM_LIBS)"'; \
+	echo '    "Target_shim_libs": "$(subst $(space),:,$(TARGET_LD_SHIM_LIBS))"'; \
 	echo '},'; \
 	echo '') > $(SOONG_VARIABLES_TMP)
