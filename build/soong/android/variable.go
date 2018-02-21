@@ -23,5 +23,5 @@ type ProductVariables struct {
 	Needs_text_relocations  *bool `json:",omitempty"`
 	Uses_qcom_bsp_legacy  *bool `json:",omitempty"`
 	Uses_samsung_cameraformat_nv21  *bool `json:",omitempty"`
-	Target_shim_libs  *string `json:",omitempty"`
+	Target_shim_libs *string `json:",omitempty"`
 }
