@@ -10,5 +10,7 @@ lineage_soong:
 	echo '    "Uses_qcom_bsp_legacy": $(if $(filter true,$(TARGET_USES_QCOM_BSP_LEGACY)),true,false),'; \
 	echo '    "Uses_samsung_cameraformat_nv21": $(if $(filter true,$(BOARD_USE_SAMSUNG_CAMERAFORMAT_NV21)),true,false),'; \
 	echo '    "Target_shim_libs": "$(subst $(space),:,$(TARGET_LD_SHIM_LIBS))"'; \
+	echo '    "Uses_qcom_bsp_legacy": $(if $(filter true,$(TARGET_USES_QCOM_BSP_LEGACY)),true,false),'; \
+	echo '    "Uses_qti_camera_device": $(if $(filter true,$(TARGET_USES_QTI_CAMERA_DEVICE)),true,false)'; \
 	echo '},'; \
 	echo '') > $(SOONG_VARIABLES_TMP)
