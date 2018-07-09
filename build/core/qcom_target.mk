@@ -26,11 +26,13 @@ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
     BR_FAMILY := msm8909 msm8916
     UM_3_18_FAMILY := msm8937 msm8953 msm8996
     UM_4_4_FAMILY := msm8998 sdm660
+    UM_4_9_FAMILY := sdm845
+    UM_PLATFORMS := $(UM_3_18_FAMILY) $(UM_4_4_FAMILY) $(UM_4_9_FAMILY)
 
     BOARD_USES_ADRENO := true
 
     # UM platforms no longer need this set on O+
-    ifneq ($(call is-board-platform-in-list, $(UM_3_18_FAMILY) $(UM_4_4_FAMILY)),true)
+    ifneq ($(call is-board-platform-in-list, $(UM_PLATFORMS)),true)
         TARGET_USES_QCOM_BSP := true
     endif
 
@@ -51,13 +53,18 @@ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
     # Allow building audio encoders
     TARGET_USES_QCOM_MM_AUDIO := true
 
-    # Enable color metadata for UM platforms
-    ifeq ($(call is-board-platform-in-list, $(UM_3_18_FAMILY) $(UM_4_4_FAMILY)),true)
+    # Enable color metadata for every UM platform
+    ifeq ($(call is-board-platform-in-list, $(UM_PLATFORMS)),true)
         TARGET_USES_COLOR_METADATA := true
     endif
 
+    # Enable DRM PP driver on UM platforms that support it
+    ifeq ($(call is-board-platform-in-list, $(UM_4_9_FAMILY)),true)
+        TARGET_USES_DRM_PP := true
+    endif
+
     # List of targets that use master side content protection
-    MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660
+    MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845
 
     ifeq ($(call is-board-platform-in-list, $(B_FAMILY)),true)
         MSM_VIDC_TARGET_LIST := $(B_FAMILY)
@@ -79,8 +86,13 @@ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
         MSM_VIDC_TARGET_LIST := $(UM_4_4_FAMILY)
         QCOM_HARDWARE_VARIANT := msm8998
     else
+    ifeq ($(call is-board-platform-in-list, $(UM_4_9_FAMILY)),true)
+        MSM_VIDC_TARGET_LIST := $(UM_4_9_FAMILY)
+        QCOM_HARDWARE_VARIANT := sdm845
+    else
         MSM_VIDC_TARGET_LIST := $(TARGET_BOARD_PLATFORM)
         QCOM_HARDWARE_VARIANT := $(TARGET_BOARD_PLATFORM)
+    endif
     endif
     endif
     endif
@@ -97,6 +109,8 @@ $(call set-device-specific-path,SENSORS,sensors,hardware/qcom/sensors)
 $(call set-device-specific-path,LOC_API,loc-api,vendor/qcom/opensource/location)
 $(call set-device-specific-path,DATASERVICES,dataservices,vendor/qcom/opensource/dataservices)
 $(call set-device-specific-path,POWER,power,hardware/qcom/power)
+$(call set-device-specific-path,THERMAL,thermal,hardware/qcom/thermal)
+$(call set-device-specific-path,VR,vr,hardware/qcom/vr)
 
 $(call wlan-set-path-variant,wlan-caf)
 $(call bt-vendor-set-path-variant,bt-caf)
