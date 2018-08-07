@@ -226,12 +226,12 @@ endif
 ifeq ($(TARGET_KERNEL_CLANG_COMPILE),true)
     ifneq ($(TARGET_KERNEL_CLANG_VERSION),)
         # Find the clang-* directory containing the specified version
-        KERNEL_CLANG_VERSION := $(shell find $(ANDROID_BUILD_TOP)/prebuilts/clang/host/$(HOST_OS)-x86/ -name AndroidVersion.txt -exec grep -l $(TARGET_KERNEL_CLANG_VERSION) "{}" \; | sed -e 's|/AndroidVersion.txt$$||g;s|^.*/||g')
+        KERNEL_CLANG_VERSION := $(shell find ./prebuilts/clang/host/$(HOST_OS)-x86/ -name AndroidVersion.txt -exec grep -l $(TARGET_KERNEL_CLANG_VERSION) "{}" \; | sed -e 's|/AndroidVersion.txt$$||g;s|^.*/||g')
     else
         # Use the default version of clang if TARGET_KERNEL_CLANG_VERSION hasn't been set by the device config
         KERNEL_CLANG_VERSION := $(LLVM_PREBUILTS_VERSION)
     endif
-    TARGET_KERNEL_CLANG_PATH ?= $(ANDROID_BUILD_TOP)/prebuilts/clang/host/$(HOST_OS)-x86/$(KERNEL_CLANG_VERSION)/bin
+    TARGET_KERNEL_CLANG_PATH ?= ./prebuilts/clang/host/$(HOST_OS)-x86/$(KERNEL_CLANG_VERSION)/bin
     ifeq ($(KERNEL_ARCH),arm64)
         KERNEL_CLANG_TRIPLE ?= CLANG_TRIPLE=aarch64-linux-gnu-
     else ifeq ($(KERNEL_ARCH),arm)
@@ -246,7 +246,7 @@ ifneq ($(USE_CCACHE),)
     ccache := $(shell which ccache)
 
     ifeq ($(ccache),)
-        ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
+        ccache := ./prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
         # Check that the executable is here.
         ccache := $(strip $(wildcard $(ccache)))
     endif
@@ -263,7 +263,7 @@ endif
 ccache =
 
 ifeq ($(HOST_OS),darwin)
-  MAKE_FLAGS += C_INCLUDE_PATH=$(ANDROID_BUILD_TOP)/external/elfutils/libelf:/usr/local/opt/openssl/include
+  MAKE_FLAGS += C_INCLUDE_PATH=./external/elfutils/libelf:/usr/local/opt/openssl/include
   MAKE_FLAGS += LIBRARY_PATH=/usr/local/opt/openssl/lib
 endif
 
@@ -310,7 +310,7 @@ TARGET_KERNEL_BINARIES: $(KERNEL_CONFIG)
 				$(hide) rm -rf $(KERNEL_OUT)/extras/$(kmod); \
 				mkdir -p $(KERNEL_OUT)/extras/$(kmod); \
 				touch $(KERNEL_OUT)/extras/$(kmod)/Makefile; \
-				$(MAKE) $(MAKE_FLAGS) -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) $(KERNEL_CC) M=$(KERNEL_OUT)/extras/$(kmod) src=$(ANDROID_BUILD_TOP)/$(EXTRA_KERNEL_MODULE_PATH_$(kmod)) modules; \
+				$(MAKE) $(MAKE_FLAGS) -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) $(KERNEL_CC) M=$(KERNEL_OUT)/extras/$(kmod) src=./$(EXTRA_KERNEL_MODULE_PATH_$(kmod)) modules; \
 			) \
 		fi
 
@@ -319,7 +319,7 @@ INSTALLED_KERNEL_MODULES: depmod-host
 	$(hide) if grep -q '^CONFIG_MODULES=y' $(KERNEL_CONFIG); then \
 			echo "Installing Kernel Modules"; \
 			$(foreach kmod,$(TARGET_EXTRA_KERNEL_MODULES),\
-				$(MAKE) $(MAKE_FLAGS) -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) $(KERNEL_CC) INSTALL_MOD_PATH=../../$(KERNEL_MODULES_INSTALL) M=$(KERNEL_OUT)/extras/$(kmod) src=$(ANDROID_BUILD_TOP)/$(EXTRA_KERNEL_MODULE_PATH_$(kmod)) modules_install; \
+				$(MAKE) $(MAKE_FLAGS) -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) $(KERNEL_CC) INSTALL_MOD_PATH=../../$(KERNEL_MODULES_INSTALL) M=$(KERNEL_OUT)/extras/$(kmod) src=./$(EXTRA_KERNEL_MODULE_PATH_$(kmod)) modules_install; \
 			) \
 			$(MAKE) $(MAKE_FLAGS) -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) $(KERNEL_CC) INSTALL_MOD_PATH=../../$(KERNEL_MODULES_INSTALL) modules_install && \
 			mofile=$$(find $(KERNEL_MODULES_OUT) -type f -name modules.order) && \
